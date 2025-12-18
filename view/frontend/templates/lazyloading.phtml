@@ -1,0 +1,25 @@
+<?php
+$_helper = $this->helper('WeltPixel\LazyLoading\Helper\Data');
+$imageLoader = $_helper->getImageLoader();
+$negativeMargin = $_helper->startLoadingEarly() ? $_helper->getNegativeMargin() : 0;
+$effectSpeed = $_helper->startLoadingEarly() ? $_helper->getEffectSpeed() : 0;
+$cspNonceProvider = $_helper->getCspNonceProvider();
+?>
+<script type="text/javascript"<?php if ($cspNonceProvider): ?> nonce="<?= $block->escapeHtmlAttr($cspNonceProvider->generateNonce()) ?>"<?php endif; ?>>
+    window.wpLazyLoad = window.wpLazyLoad || {};
+    window.wpLazyLoad.effect = "fadeIn";
+    window.wpLazyLoad.effectspeed = <?= /* @noEscape */ $effectSpeed ?>;
+    window.wpLazyLoad.imageloader = "<?= /* @noEscape */ $imageLoader ?>";
+    window.wpLazyLoad.threshold = <?= /* @noEscape */ $negativeMargin ?>;
+    require(['jquery', 'WeltPixel_LazyLoading/js/jquery_lazyload'], function($) {
+        $("img.lazy").lazyload({
+            effect: "fadeIn",
+            effectspeed: <?= /* @noEscape */  $effectSpeed ?>,
+            imageloader: "<?= /* @noEscape */ $imageLoader ?>",
+            threshold: <?= /* @noEscape */ $negativeMargin ?>,
+            load: function(elements_left, settings) {
+                $(this).css({'max-width':'100%'});
+            }
+        });
+    });
+</script>

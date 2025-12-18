@@ -1,0 +1,21 @@
+<?php /** @var $block \Magento\Catalog\Block\Product\Image */ ?>
+<?php
+$_helper = $this->helper('WeltPixel\LazyLoading\Helper\Data');
+$isRequestAjax = $_helper->isRequestAjax();
+$imgSrc = $_helper->getImageLoader();
+$imgDataOriginal = $block->getImageUrl();
+$pWidth = $_helper->getPlaceholderWidth() ?? '100%';
+if ($isRequestAjax) {
+    $pWidth = '100%';
+    $imgSrc = $imgDataOriginal;
+}
+?>
+<img class="photo image lazy"
+     <?= /* @noEscape */ $block->getCustomAttributes() ?>
+     src="<?= $block->escapeUrl($imgSrc) ?>"
+     data-original="<?= $block->escapeUrl($imgDataOriginal) ?>"
+     width="<?= /* @noEscape */ (int) $block->getWidth() ?>"
+     height="<?= /* @noEscape */ (int) $block->getHeight() ?>"
+     alt="<?= $block->escapeHtmlAttr($block->stripTags($block->getLabel(), null, true)) ?>"
+     style="max-width:<?= /* @noEscape */ $pWidth ?>"
+/>
